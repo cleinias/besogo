@@ -1,6 +1,7 @@
-(function() {
+// SF: removed anonymous function and created an object to be commonJS-exported 
 'use strict';
-var besogo = window.besogo = window.besogo || {}; // Establish our namespace
+
+var besogo =  {}; // SF --> Establish our namespace as generic object    
 besogo.VERSION = '0.0.2-alpha';
 
 besogo.create = function(container, options) {
@@ -369,4 +370,4 @@ function navigatePath(editor, path) {
     }
 }
 
-})(); // END closure
+; // END closure

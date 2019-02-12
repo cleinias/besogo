@@ -5,6 +5,10 @@ min=besogo.min.js
 
 cat js/* > $all
 
+#  Inject the commonJS call at the end of the combined file
+
+echo "exports.besogo = besogo;" >> $all
+
 curl -s \
   -d compilation_level=SIMPLE_OPTIMIZATIONS \
   -d output_format=text \
