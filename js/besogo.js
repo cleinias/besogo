@@ -97,11 +97,13 @@ besogo.create = function(container, options) {
     }
 
     options.resize = options.resize || 'auto';
+// tiddlywiki chokes on line 105 below on the getComputedStyle call, because container.parentElement is nil
     if (options.resize === 'auto') { // Add auto-resizing unless resize option is truthy
         resizer = function() {
             var windowHeight = window.innerHeight, // Viewport height
-                // Calculated width of parent element
-                parentWidth = parseFloat(getComputedStyle(container.parentElement).width),
+                // Width of parent element is passed as an option
+                // by the function calling the constructor. 
+                parentWidth = options.parentWidth,
                 maxWidth = +(options.maxwidth || -1),
                 orientation = options.orient || 'auto',
 
