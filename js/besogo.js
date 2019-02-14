@@ -1,8 +1,8 @@
-// SF: removed anonymous function and created an object to be commonJS-exported 
+// SF: removed anonymous function closure and created an object to be commonJS-exported 
 'use strict';
 
 var besogo =  {}; // SF --> Establish our namespace as generic object    
-besogo.VERSION = '0.0.2-alpha';
+besogo.VERSION = '0.0.1-TW-alpha';
 
 besogo.create = function(container, options) {
     var editor, // Core editor object
@@ -372,4 +372,4 @@ function navigatePath(editor, path) {
     }
 }
 
-; // END closure
+; // END general besogo object declaration
