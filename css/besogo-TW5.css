@@ -1,0 +1,233 @@
+/* Style sheet uses a fixed grid using CSS grid module
+*  Grid's layout, colors, and fonts emulates CGoban3 look
+*
+* The besogo editor has 7 panels:
+* 1.   mainDisplay (for the goban)
+* 2.   control (for navigating the game tree)
+* 3.   names   (For players's names and info)
+* 4.   comment (For games' move by move comments)
+* 5.   tool    (for markup tools)
+* 6.   tree    (for game tree and variations)
+* 7.   file    (for file loading and saving buttons)
+*
+*           We want to emulate this layout                tracks
+*    +------------------------+--------------------1-+      
+*    1                        2  40px  control       3     40px
+*    |                        |--------------------2-|
+*    |                        |  30px  tool          |     30px
+*    |                        |--------------------3-|
+*    | 450px goban            |                      |
+*    |                        |                      | 
+*    |                        |  310px comments      | 
+*    |                        |                      |
+*    |                        |                      |
+*    |                        |--------------------4-|     310px
+*    |                        |                      |      70px
+*    |------------------------|                    5 |
+*    |                        |  250px tree          |     250px
+*    |                        |                      |
+*    | 140px names            |                      |
+*    |                        |--------------------6-|
+*    |                        |   30px file          |       30px
+*    +------------------------+--------------------7-+
+*                 450px                 450px
+*
+*     Line 4 could perhaps be moved down to make the tree panel
+*     aligned with the names/game info panel as it is is CGoban3
+*
+*    
+*
+*/                      
+
+/* 1. Main container for the besogo editor  */
+.besogo-container {
+    outline: none;
+    /* clear: both; */
+    width: 750px;
+    height: 590px;
+    display: grid;
+    
+    /* Notice that in the CSS grid module you specify the width of the tracks
+    *  but you name the lines delimiting them on either side! 
+    */                  
+    /* in percents */
+    /* grid-template-rows: [Row-1-start] 12% [Row-1-end Row-2-start] 12% [Row-3-start Row-2-end] 52% [Row-4-start Row-3-end] 19% [Row-4-end Row-5-start] 5% [Row-5-end]; */
+    /* grid-template-columns: [Column-1] 60% [Column-2] 40%; */
+    /* /\* In pixels with overall size w:750 h:590 *\/ */
+    grid-template-rows:  40px  30px  310px 70px  180px 30px ;
+    grid-template-columns:  450px 300px ;
+    font-family: Helvetica, sans-serif;
+    font-size: 10pt;
+    /* TEST COLOR  Antique White: #FAEBD7    */
+    background: #FAEBD7;
+}                       
+
+.besogo-container * {
+    box-sizing: border-box;
+}
+
+.besogo-container button {
+    height: 30px;
+    width: 30px;
+    padding: 0px;
+    background: #d8dcd6;
+}
+
+.besogo-container input {
+    font-size: 10pt;
+}
+
+.besogo-container input[type='button'] {
+    background: #d8dcd6;
+}
+
+.besogo-container input[type='text'] {
+    width: 30px;
+}
+
+.besogo-container svg { /* Prevent text selection within SVG */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+     user-select: none;
+}
+
+/* .besogo-panels { */
+/*     display: flex; */
+/*     flex-direction: column; */
+/*     align-items: center; */
+/*     padding: 0px 5px; */
+/* } */
+
+
+.besogo-panels > * {
+    margin: 3px 0px;
+}
+
+/* 2. The movement (control) panel */
+.besogo-control {
+    grid-column: 2 / 3 ;
+    grid-row: 1 / 2 ;
+    align-items: center;
+   /*  justify-content: space-around; */
+   /*  width: 100%; */
+   /* /\* Color for the control ara is a bluish gray  	#42676B*\/ */
+    overflow: auto;
+    min-height: 0;
+    background: #42676B;
+}
+
+/* 3. The names (or game info) panel */
+.besogo-names {
+    grid-column:  1 / 2 ;
+    grid-row: 5/7 ;
+    width: 100%;
+   /* Color for the names is a black #333333     */
+   /* But using a different color for test purposes: Gold  	#FFD700 */
+    overflow: auto;
+    min-height: 0;
+    background: #FFD700;
+}
+
+.besogo-playerInfo {
+    /* display: flex; */
+    font-family: Tahoma, Geneva, sans-serif;
+    white-space: pre-wrap;
+}
+
+.besogo-blackInfo {
+    /* flex: 50%; */
+    color: white;
+    background: black;
+    text-align: right;
+    padding: 5px;
+}
+
+.besogo-whiteInfo {
+    /* flex: 50%; */
+    color: black;
+    background: white;
+    text-align: left;
+    padding: 5px;
+}
+
+.besogo-blackCaps {
+    float: left;
+}
+
+.besogo-whiteCaps {
+    float: right;
+}
+
+/* 4. The panel for the move by move comments */
+.besogo-comment {
+    grid-column:  2 / 3 ;
+    grid-row: 3/4 ;
+    font-family: Helvetica, sans-serif;
+    font-size: 10pt;
+   /*  white-space: pre-wrap; */
+   /*  overflow: auto; */
+   /*  width: 100%; */
+   /* /\* Color for the comments is a  warm grayish    *\/ */
+    overflow: auto;
+    min-height: 0;
+    overflow: auto;
+    background: #BABBAB;
+}
+
+.besogo-comment input[type='button'] {
+    float: right;
+}
+
+.besogo-comment textarea {
+    height: 100%;
+    width: 100%;
+}
+
+.besogo-gameInfo {
+    padding: 5px;
+    border-collapse: collapse;
+}
+
+.besogo-gameInfo td, tr {
+    border: 1px solid black;
+    padding: 3px;
+}
+
+/* 6. The panel for the game tree */
+.besogo-tree {
+    grid-column:  2 / 3 ;
+    grid-row: 4 / 6 ;
+    /* overflow: auto; */
+    /* width: 100%; */
+   /* Color for the tree background is a black: #333333    */
+   /* But using a different color for test purposes: Hot pink #FF69B4 */
+    overflow: auto;
+    min-height: 0;
+    background: #FF69B4;
+}
+
+/* 6. The panel for the game tree */
+.besogo-tree {
+    grid-column:  2 / 3 ;
+    grid-row: 4 / 6 ;
+    /* overflow: auto; */
+    /* width: 100%; */
+   /* Color for the tree background is a black: #333333    */
+   /* But using a different color for test purposes: Hot pink #FF69B4 */
+    overflow: auto;
+    min-height: 0;
+    background: #FF69B4;
+}
+
+/* 7. The panel for the file loading and saving commands */
+.besogo-file {
+    grid-column:  2 / 3 ;
+    grid-row: 6/7 ;
+    /* Color for the file laoding is  a very dark grey/black:  #222222  */
+    /* But using a different color for test purposes: Green/Yellow #ADFF2F */
+    overflow: auto;
+    min-height: 0;
+    background: #ADFF2F;
+}
