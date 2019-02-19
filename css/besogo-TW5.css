@@ -12,24 +12,24 @@
 *
 *           We want to emulate this layout                tracks
 *    +------------------------+--------------------1-+      
-*    1                        2  40px  control       3     40px
+*    1                        2  40px  control       3       40px
 *    |                        |--------------------2-|
-*    |                        |  30px  tool          |     30px
+*    |                        |  30px  tool          |       30px
 *    |                        |--------------------3-|
 *    | 450px goban            |                      |
 *    |                        |                      | 
-*    |                        |  310px comments      | 
+*    |                        |  310px comments      |      310px 
 *    |                        |                      |
 *    |                        |                      |
-*    |                        |--------------------4-|     310px
-*    |                        |                      |      70px
-*    |------------------------|                    5 |
-*    |                        |  250px tree          |     250px
-*    |                        |                      |
+*    |                        |--------------------4-|    
+*    |                        |                      |       70px
+*    |------------------------|                    5 |      
+*    |                        |  180px tree          |     
+*    |                        |                      |      110px
 *    | 140px names            |                      |
-*    |                        |--------------------6-|
-*    |                        |   30px file          |       30px
-*    +------------------------+--------------------7-+
+*    |                        |--------------------6-|     
+*    |                        |   30px file          |       30px 
+*    +------------------------+--------------------7-+      
 *                 450px                 450px
 *
 *     Line 4 could perhaps be moved down to make the tree panel
@@ -51,12 +51,12 @@
     *  but you name the lines delimiting them on either side! 
     */                  
     /* in percents */
-    /* grid-template-rows: [Row-1-start] 12% [Row-1-end Row-2-start] 12% [Row-3-start Row-2-end] 52% [Row-4-start Row-3-end] 19% [Row-4-end Row-5-start] 5% [Row-5-end]; */
-    /* grid-template-columns: [Column-1] 60% [Column-2] 40%; */
-    /* /\* In pixels with overall size w:750 h:590 *\/ */
-    grid-template-rows:  40px  30px  310px 70px  180px 30px ;
-    grid-template-columns:  450px 300px ;
-    font-family: Helvetica, sans-serif;
+    grid-template-rows:  7% 5% 52% 12% 19% 5% ;
+    grid-template-columns:  60%  40%;
+    /* In pixels with overall size w:750 h:590 */
+    /* grid-template-rows:  40px  30px  310px 70px  110px 30px ; */
+    /* grid-template-columns:  450px 300px ; */
+    /* font-family: Helvetica, sans-serif; */
     font-size: 10pt;
     /* TEST COLOR  Antique White: #FAEBD7    */
     background: #FAEBD7;
@@ -137,7 +137,7 @@
     grid-row: 5/7 ;
     width: 100%;
    /* Color for the names is a black #333333     */
-   /* But using a different color for test purposes: Gold  	#FFD700 */
+   /* But using a different color for test purposes: Gold #FFD700 */
     overflow: auto;
     min-height: 0;
     background: #FFD700;
