@@ -39,7 +39,7 @@
 *
 */                      
 
-/* 1. Main container for the besogo editor  */
+/* 0. Main container for the besogo editor  */
 .besogo-container {
     outline: none;
     /* clear: both; */
@@ -101,9 +101,22 @@
 /* } */
 
 
-.besogo-panels > * {
-    margin: 3px 0px;
-}
+
+/* //eliminated the following. Now every panel hangs below besogo.container */
+/* /\* .besogo-panels > * { *\/ */
+/*     margin: 3px 0px; */
+/* } */
+
+/* 1. the panel for the main board */
+.besogo-board {
+    grid-column: 1/2;
+    grid-row:    1/5;
+    align-items: center;
+    min-height: 0;
+    background:  #675443;}
+
+
+
 
 /* 2. The movement (control) panel */
 .besogo-control {
@@ -195,17 +208,14 @@
     padding: 3px;
 }
 
-/* 6. The panel for the game tree */
-.besogo-tree {
+/* 5. The panel for the markup tools */
+.besogo-tool {
     grid-column:  2 / 3 ;
-    grid-row: 4 / 6 ;
-    /* overflow: auto; */
-    /* width: 100%; */
-   /* Color for the tree background is a black: #333333    */
-   /* But using a different color for test purposes: Hot pink #FF69B4 */
+    grid-row: 2 / 3 ;
     overflow: auto;
+   /* Color for the markup is the same as for control, a dark grey  #466567  */
     min-height: 0;
-    background: #FF69B4;
+    background: #774441;
 }
 
 /* 6. The panel for the game tree */
