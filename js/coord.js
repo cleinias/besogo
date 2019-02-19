@@ -1,3 +1,9 @@
+/**
+* @fileOverview Manages the differnet coordinate types
+* @version 0.0.1-TW-alpha
+*/
+
+
 (function() {
 'use strict';
 

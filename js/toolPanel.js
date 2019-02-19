@@ -1,3 +1,8 @@
+/**
+* @fileOverview Constructs and handles the tool panel 
+* @version 0.0.1-TW-alpha
+*/
+
 besogo.makeToolPanel = function(container, editor) {
     'use strict';
     var element, // Scratch for building SVG images

@@ -1,3 +1,11 @@
+/**
+* @fileOverview Constructs and handles the comment panel 
+* @version 0.0.1-TW-alpha
+*/
+/**
+* Constructs the comment panel
+* 
+*/
 besogo.makeCommentPanel = function(container, editor) {
     'use strict';
     var infoTexts = {}, // Holds text nodes for game info properties
@@ -59,6 +67,10 @@ besogo.makeCommentPanel = function(container, editor) {
     update({ navChange: true, gameInfo: editor.getGameInfo() });
     gameInfoEdit.style.display = 'none'; // Hide game info editting table initially
 
+    /**
+    * Updates the panel with given message
+    * @param {string} msg - The message 
+    */
     function update(msg) {
         var temp; // Scratch for strings
 

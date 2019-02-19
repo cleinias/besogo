@@ -1,3 +1,8 @@
+/**
+* @fileOverview Constructs and handles the file panel
+* @version 0.0.1-TW-alpha
+*/
+
 besogo.makeFilePanel = function(container, editor) {
     'use strict';
     var fileChooser, // Reference to the file chooser element

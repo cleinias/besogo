@@ -1,3 +1,8 @@
+/**
+* @fileOverview Saves game to sgf 
+* @version 0.0.1-TW-alpha
+*/
+
 // Convert game state tree into SGF string
 besogo.composeSgf = function(editor) {
     'use strict';

@@ -1,3 +1,8 @@
+/**
+* @fileOverview Constructs and handles the complete editor GUI
+* @version 0.0.1-TW-alpha
+*/
+
 besogo.makeEditor = function(sizeX, sizeY) {
     'use strict';
     // Creates an associated game state tree

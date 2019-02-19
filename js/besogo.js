@@ -1,15 +1,35 @@
-// SF: removed anonymous function closure and created an object to be commonJS-exported 
+/**
+* @fileOverview Namespace declaration and construction of the main editor object.
+* @version 0.0.1-TW-alpha
+*/
+
+/**
+ * sgf editor module.
+ * @module besogo
+ */
+
 'use strict';
 
-var besogo =  {}; // SF --> Establish our namespace as generic object    
+/**
+* besogo is the namespace holding all the editor's 
+* components and the sgf data
+* @namespace
+*/
+var besogo =  {}; /** Generic object as namespace for the module  */
 besogo.VERSION = '0.0.1-TW-alpha';
 
+/**
+* Creates the complete sgf editor with all its panel component.
+* @param {div} container - The div that will contain the the editor
+* @param {object} options - The editor options, provides defaults
+*  
+*/
 besogo.create = function(container, options) {
-    var editor, // Core editor object
-        resizer, // Auto-resizing function
-        boardDiv, // Board display container
-        panelsDiv, // Parent container of panel divs
-        makers = { // Map to panel creators
+    var editor, /** Core editor object */
+        resizer, /** Auto-resizing function */
+        boardDiv, /** Board display container */
+        panelsDiv, /** Parent container of panel divs */
+        makers = { /** Map to panel creators */
             control: besogo.makeControlPanel,
             names: besogo.makeNamesPanel,
             comment: besogo.makeCommentPanel,
@@ -17,7 +37,7 @@ besogo.create = function(container, options) {
             tree: besogo.makeTreePanel,
             file: besogo.makeFilePanel
         },
-        insideText = container.textContent || container.innerText || '',
+        insideText = container.textContent || container.innerText || '', /** the sgf record */
         i, panelName; // Scratch iteration variables
 
     container.className += ' besogo-container'; // Marks this div as initialized
@@ -41,7 +61,7 @@ besogo.create = function(container, options) {
         options.shadows = false;
     }
 
-    // Make the core editor object
+    /** Make the core editor object */
     editor = besogo.makeEditor(options.size.x, options.size.y);
     editor.setTool(options.tool);
     editor.setCoordStyle(options.coord);
@@ -75,6 +95,7 @@ besogo.create = function(container, options) {
         container.removeChild(container.firstChild);
     }
 
+    /** Make the div for the board display */
     boardDiv = makeDiv('besogo-board'); // Create div for board display
     besogo.makeBoardDisplay(boardDiv, editor); // Create board display
 
@@ -97,7 +118,7 @@ besogo.create = function(container, options) {
     }
 
     options.resize = options.resize || 'auto';
-// tiddlywiki chokes on line 105 below on the getComputedStyle call, because container.parentElement is nil
+
     if (options.resize === 'auto') { // Add auto-resizing unless resize option is truthy
         resizer = function() {
             var windowHeight = window.innerHeight, // Viewport height
@@ -157,7 +178,11 @@ besogo.create = function(container, options) {
         setDimensions(container.clientWidth, container.clientHeight);
     }
 
-    // Sets dimensions with optional height param
+    /** Sets dimensions with optional height param, uses flex
+    *   Switches to portrait mode if height missing 
+    * @param {int} width  - The width of the div to set up in px
+    * @param {int} [height] - The optional height of the div to set up in px
+    */
     function setDimensions(width, height) {
         if (height && width > height) { // Landscape mode
             container.style['flex-direction'] = 'row';
@@ -180,7 +205,11 @@ besogo.create = function(container, options) {
         }
     }
 
-    // Creates and adds divs to specified parent or container
+/** Creates and adds div to specified parent or container
+* @param {string} className - the class for the returned div 
+* @param  {element} parent   - the parent element of the returned div
+* @returns {div} - The created div 
+*/
     function makeDiv(className, parent) {
         var div = document.createElement("div");
         if (className) {
@@ -192,7 +221,11 @@ besogo.create = function(container, options) {
     }
 }; // END function besogo.create
 
-// Parses size parameter from SGF format
+/**
+ * Parses size parameter from SGF format
+ * 
+ * @param {string} input - Either a number  for square boards or a nxn pattern 
+ */
 besogo.parseSize = function(input) {
     var matches,
         sizeX,
@@ -217,7 +250,9 @@ besogo.parseSize = function(input) {
     return { x: sizeX, y: sizeY };
 };
 
-// Automatically converts document elements into besogo instances
+/** Init function: converts calling document elements into besogo instances
+*   Not usable in TiddlyWiki
+*/
 besogo.autoInit = function() {
     var allDivs = document.getElementsByTagName('div'), // Live collection of divs
         targetDivs = [], // List of divs to auto-initialize
@@ -252,13 +287,23 @@ besogo.autoInit = function() {
         }
         besogo.create(targetDivs[i], options);
     }
-
+/**
+* Returns classname of element, if any
+* @param {element} element - The DOM element
+* @param {string} str  - A classname  
+* @returns {boolean}
+*/
     function hasClass(element, str) {
         return (element.className.split(' ').indexOf(str) !== -1);
     }
 };
 
-// Sets up keypress handling
+/**
+ * Sets up keypress handling
+ * 
+ * @param {div} container - The container of the editor
+ * @param {editor} editor - A besogo editor 
+ */
 function addKeypressHandler(container, editor) {
     if (!container.getAttribute('tabindex')) {
         container.setAttribute('tabindex', '0'); // Set tabindex to allow div focusing
@@ -301,7 +346,11 @@ function addKeypressHandler(container, editor) {
     }); // END func() and addEventListener
 } // END function addKeypressHandler
 
-// Sets up mousewheel handling
+/** 
+*Sets up mousewheel handling
+* @param {div} boardDiv - The div containing the sgf editor
+* @param {@{besogo}} editor - The sgf editor object 
+*/
 function addWheelHandler(boardDiv, editor) {
     boardDiv.addEventListener('wheel', function(evt) {
         evt = evt || window.event;
@@ -315,7 +364,11 @@ function addWheelHandler(boardDiv, editor) {
     });
 }
 
-// Parses SGF string and loads into editor
+/** 
+*Parses SGF string and loads into editor
+* @param {string} text - The sgf record of a go game 
+* @param {editor} editor - The sgf editor object 
+*/
 function parseAndLoad(text, editor) {
     var sgf;
     try {
@@ -326,7 +379,12 @@ function parseAndLoad(text, editor) {
     besogo.loadSgf(sgf, editor);
 }
 
-// Fetches text file at url from same domain
+/** 
+*Fetches sgf record from url from some move
+* @param{string} url - The url of the sgf record to fetch 
+* @path{string} path - The starting point the loaded  game will start from
+* @param {editor} editor - The {@link editor} object 
+*/
 function fetchParseLoad(url, editor, path) {
     var http = new XMLHttpRequest();
 
@@ -341,6 +399,11 @@ function fetchParseLoad(url, editor, path) {
     http.send();
 }
 
+/**
+* Navigates the given path through the sgf record  
+* @param {string} path - The path leading to the game move
+* @param {editor} editor - The sgf {@link editor} object 
+*/
 function navigatePath(editor, path) {
     var subPaths,
         i, j; // Scratch iteration variables
@@ -354,6 +417,11 @@ function navigatePath(editor, path) {
         }
     }
 
+/**
+* Executes moves
+* @param {path} part   - A path
+* @param {boolean} branch - Whether to branch or not 
+*/
     function executeMoves(part, branch) {
         var i;
         part = part.split(/\D+/); // Split on non-digits

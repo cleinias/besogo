@@ -1,3 +1,8 @@
+/**
+* @fileOverview Constructs and handles the control panel
+* @version 0.0.1-TW-alpha
+*/
+
 besogo.makeControlPanel = function(container, editor) {
     'use strict';
     var leftElements = [], // SVG elements for previous node buttons

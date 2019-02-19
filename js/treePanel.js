@@ -1,3 +1,8 @@
+/**
+* @fileOverview Constructs and handles the tree panel 
+* @version 0.0.1-TW-alpha
+*/
+
 besogo.makeTreePanel = function(container, editor) {
     'use strict';
     var svg,

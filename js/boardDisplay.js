@@ -1,3 +1,13 @@
+/**
+* @fileOverview Constructs the board display and handles GUI interactions
+* @version 0.0.1-TW-alpha
+*/
+
+/**
+* Creates the main board display area
+* @param {div} container - The containing DOM element
+* @param {editor} editor - The besogo editor 
+*/
 besogo.makeBoardDisplay = function(container, editor) {
     'use strict';
     var CELL_SIZE = 88, // Including line width
@@ -25,10 +35,10 @@ besogo.makeBoardDisplay = function(container, editor) {
     editor.addListener(update); // Register listener to handle editor/game state updates
     redrawAll(editor.getCurrent()); // Draw stones, markup and hover layer
 
-    // Set listener to detect touch interfaces
+    // Set listener to detect touch interfaces */
     container.addEventListener('touchstart', setTouchFlag);
 
-    // Function for setting the flag for touch interfaces
+    /** Function for setting the flag for touch interfaces */
     function setTouchFlag () {
         TOUCH_FLAG = true; // Set flag to prevent needless function calls
         hoverLayer = []; // Drop hover layer references, kills events
@@ -37,7 +47,9 @@ besogo.makeBoardDisplay = function(container, editor) {
         container.removeEventListener('touchstart', setTouchFlag);
     }
 
-    // Initializes the SVG and draws the board
+    /** Initializes the SVG and draws the board 
+    * @param {string} coord - PArameter describing which kind of coordinate to display, if any
+    */
     function initializeBoard(coord) {
         drawBoard(coord); // Initialize the SVG element and draw the board
 
@@ -59,7 +71,10 @@ besogo.makeBoardDisplay = function(container, editor) {
         }
     }
 
-    // Callback for board display redraws
+    /** 
+    * Callback for board display redraws
+    * @param {string} msg - ??? Unclear what it is  
+    */
     function update(msg) {
         var current = editor.getCurrent(),
             currentSize = current.getSize(),
@@ -88,13 +103,20 @@ besogo.makeBoardDisplay = function(container, editor) {
         }
     }
 
+    /** 
+    * Redraw Stones Markup and Hover
+    * @param {board} current - the current board
+    */
     function redrawAll(current) {
         redrawStones(current);
         redrawMarkup(current);
         redrawHover(current);
     }
 
-    // Initializes the SVG element and draws the board
+    /**
+    * Initializes the SVG element and draws the board
+    * @param {string} coord - Parameter describing the board coordinates to draw, if any 
+    */
     function drawBoard(coord) {
         var boardWidth,
             boardHeight,
@@ -142,7 +164,11 @@ besogo.makeBoardDisplay = function(container, editor) {
         }
     }
 
-    // Draws coordinate labels on the board
+    /**
+    * Draws coordinate labels on the board
+    * @param {string} coord - Parameter describing the  
+    * board coordinates to draw, if any.
+    */
     function drawCoords(coord) {
         var labels = besogo.coord[coord](sizeX, sizeY),
             labelXa = labels.x, // Top edge labels
@@ -164,6 +190,12 @@ besogo.makeBoardDisplay = function(container, editor) {
             drawCoordLabel(svgPos(sizeX) + shift, y, labelYb[i]);
         }
 
+        /**
+        * Draw label at coordinates
+        * @param {int} x 
+        * @param {int} y
+        * @param {string} label
+        */
         function drawCoordLabel(x, y, label) {
             var element = besogo.svgEl("text", {
                 x: x,
@@ -179,7 +211,9 @@ besogo.makeBoardDisplay = function(container, editor) {
         }
     }
 
-    // Draws hoshi onto the board at procedurally generated locations
+    /**
+    * Draws hoshi onto the board at procedurally generated locations
+    */
     function drawHoshi() {
         var cx, cy, // Center point calculation
             pathStr = ""; // Path string for drawing star points
@@ -222,7 +256,9 @@ besogo.makeBoardDisplay = function(container, editor) {
         }
     }
 
-    // Remakes the randomized index for stone images
+    /**
+    * Remakes the randomized index for stone images
+    */
     function randomizeIndex() {
         var maxIndex = besogo.BLACK_STONES * besogo.WHITE_STONES,
             i, j;
@@ -235,7 +271,9 @@ besogo.makeBoardDisplay = function(container, editor) {
         }
     }
 
-    // Adds a grid of squares to register mouse events
+    /**
+    * Adds a grid of squares to register mouse events
+    */
     function addEventTargets() {
         var element,
             i, j;
@@ -263,7 +301,13 @@ besogo.makeBoardDisplay = function(container, editor) {
         }
     }
 
-    function handleClick(i, j) { // Returns function for click handling
+    /**
+    *  Returns functions for click handling 
+    * @param {int} i - The row getting the lick
+    * @param {int} j - The column getting the click
+    * @returns {function} 
+    */ 
+    function handleClick(i, j) { 
         return function(event) {
             // Call click handler in editor
             editor.click(i, j, event.ctrlKey, event.shiftKey);
@@ -272,7 +316,14 @@ besogo.makeBoardDisplay = function(container, editor) {
             }
         };
     }
-    function handleOver(i, j) { // Returns function for mouse over
+
+    /**
+    *  Returns functions for mouse over
+    * @param {int} i - The row getting the lick
+    * @param {int} j - The column getting the click
+    * @returns {function} 
+    */ 
+    function handleOver(i, j) { 
         return function() {
             var element = hoverLayer[ fromXY(i, j) ];
             if (element) { // Make tool action visible on hover over
@@ -280,7 +331,14 @@ besogo.makeBoardDisplay = function(container, editor) {
             }
         };
     }
-    function handleOut(i, j) { // Returns function for mouse off
+
+    /**
+    *  Returns functions for mouse off
+    * @param {int} i - The row getting the lick
+    * @param {int} j - The column getting the click
+    * @returns {function} 
+    */ 
+    function handleOut(i, j) { 
         return function() {
             var element = hoverLayer[ fromXY(i, j) ];
             if (element) { // Make tool action invisible on hover off
@@ -289,7 +347,10 @@ besogo.makeBoardDisplay = function(container, editor) {
         };
     }
 
-    // Redraws the stones
+    /**
+    * Redraws the stones
+    * @param {board} current - The current board
+    */
     function redrawStones(current) {
         var group = besogo.svgEl("g"), // New stone layer group
             shadowGroup, // Group for shadow layer
@@ -325,7 +386,10 @@ besogo.makeBoardDisplay = function(container, editor) {
         stoneGroup = group;
     }
 
-    // Redraws the markup
+    /**
+    * Redraws the markup
+    * @param {board} current - The current board
+    */
     function redrawMarkup(current) {
         var element, i, j, x, y, // Scratch iteration variables
             group = besogo.svgEl("g"), // Group holding markup layer elements
@@ -402,7 +466,12 @@ besogo.makeBoardDisplay = function(container, editor) {
         markupGroup = group;
     } // END function redrawMarkup
 
-    function makeBacker(x, y) { // Makes a label markup backer at (x, y)
+    /** 
+    * Makes a label markup backer at (x, y)
+    * @param {int} x - The row for the markup
+    * @param {int} y - The column for the markup
+    */ 
+    function makeBacker(x, y) {
         return besogo.svgEl("rect", {
             x: x - CELL_SIZE/2,
             y: y - CELL_SIZE/2,
@@ -414,7 +483,14 @@ besogo.makeBoardDisplay = function(container, editor) {
         });
     }
 
-    // Checks if (x, y) is in variants
+    /**
+    * Checks if a move at (x, y) is in one of the variants
+    * @param {array} variants - The array of variant
+    * @param {board} current - The current board
+    * @param {int} x - Row 
+    * @param {int} y - Column 
+    * @returns {boolean}
+    */
     function checkVariants(variants, current, x, y) {
         var i, move;
         for (i = 0; i < variants.length; i++) {
@@ -428,7 +504,12 @@ besogo.makeBoardDisplay = function(container, editor) {
         return false;
     }
 
-    // Marks variants that have not already been marked
+    /**
+    * Marks variants that have not already been marked
+    * @param {array} variants- The array of variants
+    * @param {board} current - The current board
+    * @param {?} group
+    */
     function markRemainingVariants(variants, current, group) {
         var element,
             move, // Variant move
@@ -458,7 +539,10 @@ besogo.makeBoardDisplay = function(container, editor) {
         }
     } // END function markRemainingVariants
 
-    // Redraws the hover layer
+    /**
+    * Redraws the hover layer
+    * @param {board} current - The current board
+    */
     function redrawHover(current) {
         if (TOUCH_FLAG) {
             return; // Do nothing for touch interfaces
@@ -562,11 +646,22 @@ besogo.makeBoardDisplay = function(container, editor) {
         hoverGroup = group;
     } // END function redrawHover
 
-    function svgPos(x) {  // Converts (x, y) coordinates to SVG position
+    /**
+    * Converts (x, y) coordinates to SVG position
+    * @param {int} x - 
+    * @returns SVG position
+    */
+    function svgPos(x) {  // 
         return BOARD_MARGIN + CELL_SIZE/2 + (x-1) * CELL_SIZE;
     }
 
-    function fromXY(x, y) { // Converts (x, y) coordinates to linear index
+    /**
+    * Converts (x, y) coordinates to linear index
+    * @param {int} x - The row
+    * @param {int} y - The column
+    * @returns {int}  - Linear index
+    */
+    function fromXY(x, y) { 
         return (x - 1)*sizeY + (y - 1);
     }
 };

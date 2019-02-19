@@ -1,3 +1,9 @@
+/**
+* @fileOverview Loads a the SGF record into a parse tree
+* @version 0.0.1-TW-alpha
+*/
+
+
 // Load a parsed SGF object into a game state tree
 besogo.loadSgf = function(sgf, editor) {
     'use strict';

@@ -1,3 +1,8 @@
+/**
+* @fileOverview PArses the SGF record 
+* @version 0.0.1-TW-alpha
+*/
+
 besogo.parseSgf = function(text) {
     'use strict';
     var at = 0, // Current position

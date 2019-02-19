@@ -1,3 +1,8 @@
+/**
+* @fileOverview Constructs and handles the object holding the game tree
+* @version 0.0.1-TW-alpha
+*/
+
 besogo.makeGameRoot = function(sizeX, sizeY) {
     'use strict';
     var BLACK = -1, // Stone state constants

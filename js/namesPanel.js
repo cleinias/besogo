@@ -1,3 +1,8 @@
+/**
+* @fileOverview Constructs and handles the names panel 
+* @version 0.0.1-TW-alpha
+*/
+
 besogo.makeNamesPanel = function(container, editor) {
     'use strict';
     var playerBox = document.createElement('div'),

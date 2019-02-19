@@ -1,3 +1,8 @@
+/**
+* @fileOverview SVG utilities functions and general besogo constants
+* @version 0.0.1-TW-alpha
+*/
+
 (function() {
 'use strict';
 
