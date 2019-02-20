@@ -2,7 +2,7 @@
 *  Grid's layout, colors, and fonts emulates CGoban3 look
 *
 * The besogo editor has 7 panels:
-* 1.   mainDisplay (for the goban)
+* 1.   board   (for the goban)
 * 2.   control (for navigating the game tree)
 * 3.   names   (For players's names and info)
 * 4.   comment (For games' move by move comments)
@@ -10,60 +10,67 @@
 * 6.   tree    (for game tree and variations)
 * 7.   file    (for file loading and saving buttons)
 *
-*           We want to emulate this layout                tracks
+*       We want to emulate this layout (not to scale!)      tracks
 *    +------------------------+--------------------1-+      
-*    1                        2  40px  control       3       40px
-*    |                        |--------------------2-|
-*    |                        |  30px  tool          |       30px
-*    |                        |--------------------3-|
-*    | 450px goban            |                      |
-*    |                        |                      | 
-*    |                        |  310px comments      |      310px 
-*    |                        |                      |
-*    |                        |                      |
-*    |                        |--------------------4-|    
-*    |                        |                      |       70px
-*    |------------------------|                    5 |      
-*    |                        |  180px tree          |     
+*    | +--------------------+ 2  40px  2-control   2 |       40px
+*    | |                    | |--------------------3-|
+*    | |                    | |  30px  5-tool        |       30px
+*    | |                    | |--------------------4-|
+*    | |  410px 1-board     | |                      |
+*    | |                    | |                      | 
+*    | |                    | |  310px 4-comments    |      310px 
+*    1 2                    3 4                      5
+*    | |                    | |                      |
+*    | |                    | |--------------------5-|    
+*    | +--------------------+ |                    6 |       70px
+*    |------------------------|                    7 |      
+*    |                        |  180px 6-tree        |     
 *    |                        |                      |      110px
-*    | 140px names            |                      |
-*    |                        |--------------------6-|     
-*    |                        |   30px file          |       30px 
-*    +------------------------+--------------------7-+      
-*                 450px                 450px
+*    | 140px 3-names          |                      |
+*    |                        |--------------------8-|     
+*    |                        |   30px 7-file        |       30px 
+*    +------------------------+--------------------9-+      
+*                 450px                 300px
 *
-*     Line 4 could perhaps be moved down to make the tree panel
-*     aligned with the names/game info panel as it is is CGoban3
+*     There are 7 panels in total, and the board has a 
+*     border all around where the underlying container shows thru.
+*     In CSS grid terms we have 5 vertical lines delimiting 4 vert. tracks
+*     and 9 horizontal lines delimiting 8 horiz. tracks.
+*     The sizes of the tracks in the diagram are in px assuming    
+*     an ideal size (h:590 x w:750), with proportionally smaller widths 
+*     for smaller sizes.
 *
-*    
-*
+*     (Line 4 could perhaps be moved down to make the tree panel
+*     aligned with the names/game info panel as it is is CGoban3).
 */                      
 
 /* 0. Main container for the besogo editor  */
 .besogo-container {
     outline: none;
     /* clear: both; */
-    width: 750px;
-    height: 590px;
+    /* width: 750px; */
+    /* height: 590px; */
     display: grid;
-    
     /* Notice that in the CSS grid module you specify the width of the tracks
     *  but you name the lines delimiting them on either side! 
     */                  
-    /* in percents */
-    grid-template-rows:  7% 5% 52% 12% 19% 5% ;
-    grid-template-columns:  60%  40%;
     /* In pixels with overall size w:750 h:590 */
-    /* grid-template-rows:  40px  30px  310px 70px  110px 30px ; */
-    /* grid-template-columns:  450px 300px ; */
+    /* grid-template-rows:  20px 20px  30px  310px 50px 20px 110px 30px ; */
+    /* grid-template-columns:  20px 410px 20px 300px ; */
+    /* in percents */
+    grid-template-rows:  3% 3% 5% 53% 8% 3% 20% 5% ; /* Rounding up pixel sizes*/
+    grid-template-columns:  3% 54%  3% 40%;
+
     /* font-family: Helvetica, sans-serif; */
     font-size: 10pt;
     /* TEST COLOR  Antique White: #FAEBD7    */
-    background: #FAEBD7;
+    /* background: #FAEBD7; */
+    background:  #675443;  /* will show up as a border around the board*/
 }                       
 
 .besogo-container * {
     box-sizing: border-box;
+    background:  #675443;  /* will show up as a border around the board*/
 }
 
 .besogo-container button {
@@ -93,35 +100,39 @@
      user-select: none;
 }
 
-/* .besogo-panels { */
-/*     display: flex; */
-/*     flex-direction: column; */
-/*     align-items: center; */
-/*     padding: 0px 5px; */
-/* } */
-
-
-
-/* //eliminated the following. Now every panel hangs below besogo.container */
-/* /\* .besogo-panels > * { *\/ */
-/*     margin: 3px 0px; */
-/* } */
 
 /* 1. the panel for the main board */
 .besogo-board {
-    grid-column: 1/2;
-    grid-row:    1/5;
+    grid-column: 2/3;
+    grid-row:    2/6;
     align-items: center;
     min-height: 0;
-    background:  #675443;}
+    background:   #f2b06d;} 
 
+/* Sensei's Library mimic board theme */
+
+.besogo-svg-board {
+    fill: #f2b06d;
+}
+
+.besogo-svg-lines {
+    stroke: black;
+    stroke-width: 3;
+    fill: none;
+}
+
+.besogo-svg-hoshi {
+    stroke: black;
+    stroke-width: 15;
+    stroke-linecap: square;
+}
 
 
 
 /* 2. The movement (control) panel */
 .besogo-control {
-    grid-column: 2 / 3 ;
-    grid-row: 1 / 2 ;
+    grid-column: 4 / 5 ;
+    grid-row: 1 / 3 ;
     align-items: center;
    /*  justify-content: space-around; */
    /*  width: 100%; */
@@ -133,8 +144,8 @@
 
 /* 3. The names (or game info) panel */
 .besogo-names {
-    grid-column:  1 / 2 ;
-    grid-row: 5/7 ;
+    grid-column:  1 / 4 ;
+    grid-row: 7/9 ;
     width: 100%;
    /* Color for the names is a black #333333     */
    /* But using a different color for test purposes: Gold #FFD700 */
@@ -175,8 +186,8 @@
 
 /* 4. The panel for the move by move comments */
 .besogo-comment {
-    grid-column:  2 / 3 ;
-    grid-row: 3/4 ;
+    grid-column:  4 / 5 ;
+    grid-row: 4/5 ;
     font-family: Helvetica, sans-serif;
     font-size: 10pt;
    /*  white-space: pre-wrap; */
@@ -196,22 +207,23 @@
 .besogo-comment textarea {
     height: 100%;
     width: 100%;
-}
+    background: #BABBAB;}
 
 .besogo-gameInfo {
     padding: 5px;
     border-collapse: collapse;
-}
+    background: #BABBAB;}
 
 .besogo-gameInfo td, tr {
     border: 1px solid black;
     padding: 3px;
+    background: #BABBAB;    
 }
 
 /* 5. The panel for the markup tools */
 .besogo-tool {
-    grid-column:  2 / 3 ;
-    grid-row: 2 / 3 ;
+    grid-column:  4 / 5 ;
+    grid-row: 3 / 4 ;
     overflow: auto;
    /* Color for the markup is the same as for control, a dark grey  #466567  */
     min-height: 0;
@@ -220,8 +232,8 @@
 
 /* 6. The panel for the game tree */
 .besogo-tree {
-    grid-column:  2 / 3 ;
-    grid-row: 4 / 6 ;
+    grid-column:  4 / 5 ;
+    grid-row: 5 / 8 ;
     /* overflow: auto; */
     /* width: 100%; */
    /* Color for the tree background is a black: #333333    */
@@ -233,8 +245,8 @@
 
 /* 7. The panel for the file loading and saving commands */
 .besogo-file {
-    grid-column:  2 / 3 ;
-    grid-row: 6/7 ;
+    grid-column:  4 / 5 ;
+    grid-row: 8 / 9
     /* Color for the file laoding is  a very dark grey/black:  #222222  */
     /* But using a different color for test purposes: Green/Yellow #ADFF2F */
     overflow: auto;
