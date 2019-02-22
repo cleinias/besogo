@@ -28,7 +28,8 @@ besogo.create = function(container, options) {
     var editor, /** Core editor object */
         resizer, /** Auto-resizing function */
         boardDiv, /** Board display container */
-        panelsDiv, /** Parent container of panel divs */
+        //SF: PanelsDiv note used  TW5 version
+        panelsDiv, /** Parent container of panel divs */ 
         makers = { /** Map to panel creators */
             control: besogo.makeControlPanel,
             names: besogo.makeNamesPanel,
@@ -102,22 +103,23 @@ besogo.create = function(container, options) {
     if (!options.nowheel) { // Add mousewheel handler unless nowheel option is truthy
         addWheelHandler(boardDiv, editor);
     }
-
+    // SF: move all the panels we are making to children of the container div, ignore panelsDiv 
     if (options.panels.length > 0) { // Only create if there are panels to add
-        panelsDiv = makeDiv('besogo-panels');
         for (i = 0; i < options.panels.length; i++) {
             panelName = options.panels[i];
             if (makers[panelName]) { // Only add if creator function exists
-                makers[panelName](makeDiv('besogo-' + panelName, panelsDiv), editor);
+                //SF: removed panelsDiv from next line, makeDiv defaults to container
+                makers[panelName](makeDiv('besogo-' + panelName, container), editor);
             }
         }
-        if (!panelsDiv.firstChild) { // If no panels were added
-            container.removeChild(panelsDiv); // Remove the panels div
-            panelsDiv = false; // Flags panels div as removed
-        }
+    //     SF: removed these lines, panelsDiv is now empty 
+    //     if (!panelsDiv.firstChild) { // If no panels were added
+    //         container.removeChild(panelsDiv); // Remove the panels div
+    //         panelsDiv = false; // Flags panels div as removed
+    //     }
     }
 
-    options.resize = options.resize || 'auto';
+    options.resize = options.resize || 'fixed';  // Always default to fix for TW-5
 
     if (options.resize === 'auto') { // Add auto-resizing unless resize option is truthy
         resizer = function() {
@@ -180,30 +182,35 @@ besogo.create = function(container, options) {
 
     /** Sets dimensions with optional height param, uses flex
     *   Switches to portrait mode if height missing 
-    * @param {int} width  - The width of the div to set up in px
+    * @param {int} width    - The width of the div to set up in px
     * @param {int} [height] - The optional height of the div to set up in px
     */
+    //SF: FIXME: Need to change this function to switch to new CSS-grid layout. NO FLEX! 
     function setDimensions(width, height) {
-        if (height && width > height) { // Landscape mode
-            container.style['flex-direction'] = 'row';
-            boardDiv.style.height = height + 'px';
-            boardDiv.style.width = height + 'px';
-            if (panelsDiv) {
-                panelsDiv.style.height = height + 'px';
-                panelsDiv.style.width = (width - height) + 'px';
-            }
-        } else { // Portrait mode (implied if height is missing)
-            container.style['flex-direction'] = 'column';
-            boardDiv.style.height = width + 'px';
-            boardDiv.style.width = width + 'px';
-            if (panelsDiv) {
-                if (height) { // Only set height if param present
-                    panelsDiv.style.height = (height - width) + 'px';
-                }
-                panelsDiv.style.width = width + 'px';
-            }
-        }
+        // SF: Quick hack for testing
+        // Do nothing! All div's dimensions are set by CSS-grid
     }
+    //   ORIGINAL CODE ALL COMMENTED OUT    
+    //     if (height && width > height) { // Landscape mode
+    //         container.style['flex-direction'] = 'row';
+    //         boardDiv.style.height = height + 'px';
+    //         boardDiv.style.width = height + 'px';
+    //         if (panelsDiv) {
+    //             panelsDiv.style.height = height + 'px';
+    //             panelsDiv.style.width = (width - height) + 'px';
+    //         }
+    //     } else { // Portrait mode (implied if height is missing)
+    //         container.style['flex-direction'] = 'column';
+    //         boardDiv.style.height = width + 'px';
+    //         boardDiv.style.width = width + 'px';
+    //         if (panelsDiv) {
+    //             if (height) { // Only set height if param present
+    //                 panelsDiv.style.height = (height - width) + 'px';
+    //             }
+    //             panelsDiv.style.width = width + 'px';
+    //         }
+    //     }
+    // }
 
 /** Creates and adds div to specified parent or container
 * @param {string} className - the class for the returned div 
@@ -219,6 +226,63 @@ besogo.create = function(container, options) {
         parent.appendChild(div);
         return div;
     }
+    //SF: Added code for TW callback function to save to tiddler:
+    // 1. The event listener added to the besogo editor, with the callback function
+    editor.addListener(tiddlerUpdate); 
+
+    // 2. The callback function to update the tiddler from the besogo editor
+    // FIXME: NEED TO SEPARATE GAME INFO SAVE FROM SGF SAVE
+    function tiddlerUpdate (msg){
+        // self = this;
+        if (msg.treeChange || msg.stoneChange || msg.markupChange) {
+            saveToTiddler();
+        }
+    }
+    
+   // 3. The function that actually saves the sgf and info file so the tiddler
+    function saveToTiddler (){
+        var fieldsUpdates = {};          // Objects with new values for all the tiddler's fields
+        var gameInfo = editor.getGameInfo();
+        fieldsUpdates["text"] = besogo.composeSgf(editor);
+        for (var field in gameInfo){
+            besogo.widget.parseTreeNode[fieldsUpdates[sgfInfoToTW5[field]]]= gameInfo[field];
+        }
+    }
+
+    // 4. The map between sgf format's cryptic gameInfo codes and TW5's field names
+    //    from official specs at: https://www.red-bean.com/sgf/properties.html#AN
+    var sgfInfoToTW5 = {
+        AP : "application",
+        CA : "charset",
+        FF : "file-format",
+        SZ : "board-size",
+        AN : "annotator",
+        BR : "black-rank",
+        BT : "black-team",
+        CP : "copyright",
+        DT : "date",
+        EV : "event",
+        GN : "game-name",
+        GC : "game-summary-info",
+        ON : "opening",
+        OT : "overtime",
+        PB : "black-name",
+        PC : "location",
+        PW : "white-name",
+        RE : "result",
+        RO : "round-number",
+        RU : "rules",
+        SO : "source",
+        TM : "time-limits",
+        US : "creator",
+        WR : "white-rank",
+        WT : "white-team",
+        HA : "handicap",
+        KM : "komi" 
+    };
+    
+   // SF: END TW5 update code 
+
 }; // END function besogo.create
 
 /**
@@ -438,6 +502,6 @@ function navigatePath(editor, path) {
             }
         }
     }
-}
+};
 
-; // END general besogo object declaration
+// END general besogo object declaration
