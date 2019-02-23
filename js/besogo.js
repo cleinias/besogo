@@ -226,62 +226,101 @@ besogo.create = function(container, options) {
         parent.appendChild(div);
         return div;
     }
-    //SF: Added code for TW callback function to save to tiddler:
+    //SF: Added code for TW5 callback function to save to tiddler:
     // 1. The event listener added to the besogo editor, with the callback function
     editor.addListener(tiddlerUpdate); 
 
     // 2. The callback function to update the tiddler from the besogo editor
-    // FIXME: NEED TO SEPARATE GAME INFO SAVE FROM SGF SAVE
     function tiddlerUpdate (msg){
-        // self = this;
-        if (msg.treeChange || msg.stoneChange || msg.markupChange) {
-            saveToTiddler();
+        if (msg.treeChange || msg.stoneChange || msg.markupChange || msg.comment) {
+            saveSgfToTiddler();
+        };
+        if (msg.gameInfo){
+            saveInfoToTiddler();
         }
     }
     
-   // 3. The function that actually saves the sgf and info file so the tiddler
-    function saveToTiddler (){
-        var fieldsUpdates = {};          // Objects with new values for all the tiddler's fields
+    // 3. The functions that actually save the sgf and info file so the tiddler
+    /**
+    * Asks the editor for all the info about the current game 
+    * and saves them to the tiddler
+    */
+    function saveInfoToTiddler (){
+        // var sgfInfoToTW5 = {
+        //     "AP" : "application",
+        //     "CA" : "charset",
+        //     "FF" : "file-format",
+        //     "SZ" : "board-size",
+        //     "AN" : "annotator",
+        //     "BR" : "black-rank",
+        //     "BT" : "black-team",
+        //     "CP" : "copyright",
+        //     "DT" : "date",
+        //     "EV" : "event",
+        //     "GN" : "game-name",
+        //     "GC" : "game-summary-info",
+        //     "ON" : "opening",
+        //     "OT" : "overtime",
+        //     "PB" : "black-name",
+        //     "PC" : "location",
+        //     "PW" : "white-name",
+        //     "RE" : "result",
+        //     "RO" : "round-number",
+        //     "RU" : "rules",
+        //     "SO" : "source",
+        //     "TM" : "time-limits",
+        //     "US" : "sgf-creator",
+        //     "WR" : "white-rank",
+        //     "WT" : "white-team",
+        //     "HA" : "handicap",
+        //     "KM" : "komi" 
+        // };
         var gameInfo = editor.getGameInfo();
-        fieldsUpdates["text"] = besogo.composeSgf(editor);
         for (var field in gameInfo){
-            besogo.widget.parseTreeNode[fieldsUpdates[sgfInfoToTW5[field]]]= gameInfo[field];
-        }
-    }
-
-    // 4. The map between sgf format's cryptic gameInfo codes and TW5's field names
-    //    from official specs at: https://www.red-bean.com/sgf/properties.html#AN
-    var sgfInfoToTW5 = {
-        AP : "application",
-        CA : "charset",
-        FF : "file-format",
-        SZ : "board-size",
-        AN : "annotator",
-        BR : "black-rank",
-        BT : "black-team",
-        CP : "copyright",
-        DT : "date",
-        EV : "event",
-        GN : "game-name",
-        GC : "game-summary-info",
-        ON : "opening",
-        OT : "overtime",
-        PB : "black-name",
-        PC : "location",
-        PW : "white-name",
-        RE : "result",
-        RO : "round-number",
-        RU : "rules",
-        SO : "source",
-        TM : "time-limits",
-        US : "creator",
-        WR : "white-rank",
-        WT : "white-team",
-        HA : "handicap",
-        KM : "komi" 
+            var tiddlerTitle = besogo.widget.parentWidget.transcludeTitle;
+            var fieldName = besogo.sgfInfoToTW5[field];
+            var fieldValue = gameInfo[field];
+            besogo.widget.wiki.setText(tiddlerTitle, fieldName, null, fieldValue, null);
+        };
     };
     
-   // SF: END TW5 update code 
+    function saveSgfToTiddler(){
+        var tiddlerTitle = besogo.widget.parentWidget.transcludeTitle;
+        besogo.widget.wiki.setText(tiddlerTitle, "text", null, besogo.composeSgf(editor), null);
+    }
+    
+    // 4. The map between sgf format's cryptic gameInfo codes and TW5's field names
+    //   from official specs at: https://www.red-bean.com/sgf/properties.html#AN
+
+        besogo.sgfInfoToTW5 = {
+            "AP" : "application",
+            "CA" : "charset",
+            "FF" : "file-format",
+            "SZ" : "board-size",
+            "AN" : "annotator",
+            "BR" : "black-rank",
+            "BT" : "black-team",
+            "CP" : "copyright",
+            "DT" : "date",
+            "EV" : "event",
+            "GN" : "game-name",
+            "GC" : "game-summary-info",
+            "ON" : "opening",
+            "OT" : "overtime",
+            "PB" : "black-name",
+            "PC" : "location",
+            "PW" : "white-name",
+            "RE" : "result",
+            "RO" : "round-number",
+            "RU" : "rules",
+            "SO" : "source",
+            "TM" : "time-limits",
+            "US" : "sgf-creator",
+            "WR" : "white-rank",
+            "WT" : "white-team",
+            "HA" : "handicap",
+            "KM" : "komi" 
+        };  // SF: END TW5 update code 
 
 }; // END function besogo.create
 
