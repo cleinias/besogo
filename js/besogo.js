@@ -88,6 +88,15 @@ besogo.create = function(container, options) {
         navigatePath(editor, options.path); // Navigate editor along path
     }
 
+    // TW5: set current node  to stored position, defaults to root
+    var previousPosInTree = besogo.widget.wiki.getTiddler(besogo.widget.getVariable("currentTiddler")).fields["editorPosInTree"];
+    // If we are at root do nothing
+    if (previousPosInTree &&  previousPosInTree !== "0,0"){
+        goToPosInTree(previousPosInTree.trim().split(",")[0],
+                      previousPosInTree.trim().split(",")[1], editor);
+    };
+    
+
     if (typeof options.variants === 'number' || typeof options.variants === 'string') {
         editor.setVariantStyle(+options.variants); // Converts to number
     }
@@ -226,72 +235,103 @@ besogo.create = function(container, options) {
         parent.appendChild(div);
         return div;
     }
-    //SF: Added code for TW5 callback function to save to tiddler:
-    // 1. The event listener added to the besogo editor, with the callback function
+    // SF: Added code for TW5 callback function to save to tiddler:
+    /** TW5: Adds an event listener to the besogo editor
+    *        with the callback function
+    * @param {function} tiddlerUpdate - the callback function to update the tiddler
+    */
     editor.addListener(tiddlerUpdate); 
 
-    // 2. The callback function to update the tiddler from the besogo editor
+    /**
+    * TW5: Updates the widget's underlying tiddler
+    * @param {Object} msg - The message sent from the notifier
+    */
     function tiddlerUpdate (msg){
+        var tiddlerTitle = besogo.widget.parentWidget.transcludeTitle;
         if (msg.treeChange || msg.stoneChange || msg.markupChange || msg.comment) {
-            saveSgfToTiddler();
+            saveSgfToTiddler(tiddlerTitle);
         };
         if (msg.gameInfo){
-            saveInfoToTiddler();
-        }
+            saveInfoToTiddler(tiddlerTitle);
+        };
+        savePosToTiddler(tiddlerTitle);
     }
     
-    // 3. The functions that actually save the sgf and info file so the tiddler
     /**
-    * Asks the editor for all the info about the current game 
-    * and saves them to the tiddler
+    * TW5: Asks the editor for all the info about the current game 
+    * and saves them to the widget's underlying tiddler.
     */
-    function saveInfoToTiddler (){
-        // var sgfInfoToTW5 = {
-        //     "AP" : "application",
-        //     "CA" : "charset",
-        //     "FF" : "file-format",
-        //     "SZ" : "board-size",
-        //     "AN" : "annotator",
-        //     "BR" : "black-rank",
-        //     "BT" : "black-team",
-        //     "CP" : "copyright",
-        //     "DT" : "date",
-        //     "EV" : "event",
-        //     "GN" : "game-name",
-        //     "GC" : "game-summary-info",
-        //     "ON" : "opening",
-        //     "OT" : "overtime",
-        //     "PB" : "black-name",
-        //     "PC" : "location",
-        //     "PW" : "white-name",
-        //     "RE" : "result",
-        //     "RO" : "round-number",
-        //     "RU" : "rules",
-        //     "SO" : "source",
-        //     "TM" : "time-limits",
-        //     "US" : "sgf-creator",
-        //     "WR" : "white-rank",
-        //     "WT" : "white-team",
-        //     "HA" : "handicap",
-        //     "KM" : "komi" 
-        // };
-        var gameInfo = editor.getGameInfo();
+    function saveInfoToTiddler (tiddlerTitle){
+        var gameInfo = editor.getGameInfo(tiddlerTitle);
         for (var field in gameInfo){
-            var tiddlerTitle = besogo.widget.parentWidget.transcludeTitle;
             var fieldName = besogo.sgfInfoToTW5[field];
             var fieldValue = gameInfo[field];
             besogo.widget.wiki.setText(tiddlerTitle, fieldName, null, fieldValue, null);
         };
     };
     
-    function saveSgfToTiddler(){
-        var tiddlerTitle = besogo.widget.parentWidget.transcludeTitle;
+    /**
+    * TW5: Creates the sgf record from the tree and 
+    * saves it to the editor's widget's underlying tiddler.
+    */
+    function saveSgfToTiddler(tiddlerTitle){
         besogo.widget.wiki.setText(tiddlerTitle, "text", null, besogo.composeSgf(editor), null);
     }
-    
-    // 4. The map between sgf format's cryptic gameInfo codes and TW5's field names
-    //   from official specs at: https://www.red-bean.com/sgf/properties.html#AN
 
+    /**
+    * TW5: Save current position in the game tree to tiddler.
+    *      Needed because TW5 saves and reloads the game record 
+    *      on every tree change. 
+    */
+    function savePosToTiddler(tiddlerTitle){
+        besogo.widget.wiki.setText(tiddlerTitle, "editorPosInTree", null, moveFromNode(editor.getCurrent()), null);
+    }
+
+    /**
+    * Returns a  x,y string indicating move (x) and variation (y)
+    * of given node.
+    * @param {node} node - A position in the game tree.
+    * SF: TW5 needs to save current position in tree, because 
+    *     it is reloaded on every save 
+    */
+    function moveFromNode(node){
+        var x, y = 0;
+        x = node.moveNumber;
+        if (x===0){
+            y = 0;   // we are at the root, return 0,0
+        }
+        else {
+            for (var sibling of node.parent.children){
+                y++;
+                if (sibling.move == node.move){
+                    break;
+                }
+            }
+        }
+        return x + "," + y; 
+    }
+    /** 
+    * Navigates to move m and variation v in game tree
+    * @param {int} m - The move (depth level) in the game tree, 0-based
+    * @param {int] v - The variant (breadth span) of move m, 0-based
+    * @param {editor} editor - The besogo editor holding the game tree
+    */
+    function goToPosInTree(m,v,editor){
+        
+        editor.nextNode(m); //Goes to first variation of move m 
+        var siblings = editor.getCurrent().parent.children;
+        editor.setCurrent(siblings[v-1]); // Choose the v-th sibling
+        for (var i = 0; i< m; i++){
+            
+        }
+    };
+
+    
+    /** TW5: The map between sgf format's cryptic gameInfo codes 
+    *   and TW5's field names
+    *   from official specs at: 
+    *   https://www.red-bean.com/sgf/properties.html#AN
+    */
         besogo.sgfInfoToTW5 = {
             "AP" : "application",
             "CA" : "charset",
@@ -323,6 +363,7 @@ besogo.create = function(container, options) {
         };  // SF: END TW5 update code 
 
 }; // END function besogo.create
+
 
 /**
  * Parses size parameter from SGF format

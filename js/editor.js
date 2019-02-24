@@ -7,8 +7,7 @@ besogo.makeEditor = function(sizeX, sizeY) {
     'use strict';
     // Creates an associated game state tree
     var root = besogo.makeGameRoot(sizeX, sizeY),
-        current = root, // Navigation cursor
-
+        current = root,
         listeners = [], // Listeners of general game/editor state changes
 
         // Enumeration of editor tools/modes
@@ -39,6 +38,8 @@ besogo.makeEditor = function(sizeX, sizeY) {
 
         // Variant style: even/odd - children/siblings, <2 - show auto markup for variants
         variantStyle = 0; // 0-3, 0 is default
+
+
 
     return {
         addListener: addListener,
@@ -523,4 +524,6 @@ besogo.makeEditor = function(sizeX, sizeY) {
             listeners[i](msg);
         }
     }
+
+
 };
