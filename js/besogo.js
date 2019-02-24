@@ -1,6 +1,6 @@
 /**
 * @fileOverview Namespace declaration and construction of the main editor object.
-* @version 0.0.1-TW-alpha
+* @version 0.0.3-TW-alpha
 */
 
 /**
@@ -28,8 +28,7 @@ besogo.create = function(container, options) {
     var editor, /** Core editor object */
         resizer, /** Auto-resizing function */
         boardDiv, /** Board display container */
-        //SF: PanelsDiv note used  TW5 version
-        panelsDiv, /** Parent container of panel divs */ 
+        panelsDiv, /** Parent container of panel divs (not used in TW5 version)*/
         makers = { /** Map to panel creators */
             control: besogo.makeControlPanel,
             names: besogo.makeNamesPanel,
@@ -235,9 +234,14 @@ besogo.create = function(container, options) {
         parent.appendChild(div);
         return div;
     }
-    // SF: Added code for TW5 callback function to save to tiddler:
-    /** TW5: Adds an event listener to the besogo editor
-    *        with the callback function
+/**
+*  TW5: Additional functions Tiddlywiki 5 needs to keep the 
+* editor's game tree in sync with the underlying tiddler
+*/
+    /** 
+    * TW5: Adds an event listener to the besogo editor 
+    * with the callback function
+    *        
     * @param {function} tiddlerUpdate - the callback function to update the tiddler
     */
     editor.addListener(tiddlerUpdate); 
@@ -260,6 +264,8 @@ besogo.create = function(container, options) {
     /**
     * TW5: Asks the editor for all the info about the current game 
     * and saves them to the widget's underlying tiddler.
+    * @param {string} tiddlerTitle - The title of the underlying tiddler 
+                                     holding the sgf record  
     */
     function saveInfoToTiddler (tiddlerTitle){
         var gameInfo = editor.getGameInfo(tiddlerTitle);
@@ -273,6 +279,8 @@ besogo.create = function(container, options) {
     /**
     * TW5: Creates the sgf record from the tree and 
     * saves it to the editor's widget's underlying tiddler.
+    * @param {string} tiddlerTitle - The title of the underlying tiddler 
+                                     holding the sgf record  
     */
     function saveSgfToTiddler(tiddlerTitle){
         besogo.widget.wiki.setText(tiddlerTitle, "text", null, besogo.composeSgf(editor), null);
@@ -288,11 +296,10 @@ besogo.create = function(container, options) {
     }
 
     /**
-    * Returns a  x,y string indicating move (x) and variation (y)
-    * of given node.
+    * TW5: Returns a  x,y string indicating move (x) and variation (y)
+    *      of given node. TW5 needs to save current position in tree, 
+    *      because it is reloaded on every editor change. 
     * @param {node} node - A position in the game tree.
-    * SF: TW5 needs to save current position in tree, because 
-    *     it is reloaded on every save 
     */
     function moveFromNode(node){
         var x, y = 0;
@@ -311,16 +318,15 @@ besogo.create = function(container, options) {
         return x + "," + y; 
     }
     /** 
-    * Navigates to move m and variation v in game tree
-    * @param {int} m - The move (depth level) in the game tree, 0-based
-    * @param {int] v - The variant (breadth span) of move m, 0-based
+    * TW5: Navigates to move m and variation v in game tree
+    * @param {int} m - The move (depth level) in the game tree
+    * @param {int] v - The variant (breadth span) of move m
     * @param {editor} editor - The besogo editor holding the game tree
     */
     function goToPosInTree(m,v,editor){
-        
         editor.nextNode(m); //Goes to first variation of move m 
         var siblings = editor.getCurrent().parent.children;
-        editor.setCurrent(siblings[v-1]); // Choose the v-th sibling
+        editor.setCurrent(siblings[v-1]); // Choose the v-th sibling, 0-based
         for (var i = 0; i< m; i++){
             
         }
@@ -328,8 +334,7 @@ besogo.create = function(container, options) {
 
     
     /** TW5: The map between sgf format's cryptic gameInfo codes 
-    *   and TW5's field names
-    *   from official specs at: 
+    *   and TW5's field names. From the official specs at: 
     *   https://www.red-bean.com/sgf/properties.html#AN
     */
         besogo.sgfInfoToTW5 = {
@@ -360,8 +365,8 @@ besogo.create = function(container, options) {
             "WT" : "white-team",
             "HA" : "handicap",
             "KM" : "komi" 
-        };  // SF: END TW5 update code 
-
+        };  // END TW5 update code
+    
 }; // END function besogo.create
 
 
