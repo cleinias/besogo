@@ -9,7 +9,9 @@ besogo.makeTreePanel = function(container, editor) {
         pathGroup,
         bottomLayer,
         currentMarker,
-        SCALE = 0.25; // Tree size scaling factor
+        // Tree size scaling factor, works as a multiplier for nodes:
+        // node size / SCALE
+        SCALE = 0.17; 
 
     rebuildNavTree();
     editor.addListener(treeUpdate);
@@ -93,20 +95,24 @@ besogo.makeTreePanel = function(container, editor) {
         bottomLayer = besogo.svgEl("g"); // Holder for the current marker
         pathGroup = besogo.svgEl("g"); // Holder for path elements
 
-        svg.appendChild(background); // Background color first
+        svg.appendChild(background);  // Background color first
         svg.appendChild(bottomLayer); // Bottom layer (for current marker) second
-        svg.appendChild(pathGroup); // Navigation path third
+        svg.appendChild(pathGroup);   // Navigation path third
 
         path = recursiveTreeBuild(root, 0, 0, nextOpen); // Build the tree
         pathGroup.appendChild(finishPath(path, 'black')); // Finish and add root path
-
+        
         width = 120 * nextOpen.length; // Compute height and width of nav tree
         height = 120 * Math.max.apply(Math, nextOpen);
-        svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
-        svg.setAttribute('height', height * SCALE); // Scale down the actual SVG size
-        svg.setAttribute('width', width * SCALE);
-
-        if (oldSvg) { // Replace SVG in container
+        // viewBox= TW5TreeViewBoxSize(width, height, divWidth,divHeight);
+        // SF: temp! set proper viewbox in CSS!
+        svg.setAttribute('viewBox', '0 0 ' + width / SCALE + ' ' + height / SCALE); //scaling up tree 
+        svg.setAttribute('height', height + "px"); 
+        svg.setAttribute('width', width + "px");   
+        svg.setAttribute('overflow','scroll');
+        svg.setAttribute('class', 'besogo-svgTree');
+        console.log("Tree real height: ", height, "  and real width: ", width);
+        if (oldSvg) { // Replace SVG in container  // Now the tree
             container.replaceChild(svg, oldSvg);
         } else { // SVG not yet added to container
             container.appendChild(svg);
@@ -154,24 +160,26 @@ besogo.makeTreePanel = function(container, editor) {
 
     function makeNodeIcon(node, x, y) { // Makes a node icon for the tree
         var element,
-            color;
+            color,
+            nodeIconSize = 10; //SF: we're making a smaller icon---> see addition to svgStone
 
         switch(node.getType()){
+            
             case 'move': // Move node
                 color = node.move.color;
                 element = besogo.svgEl("g");
-                element.appendChild( besogo.svgStone(svgPos(x), svgPos(y), color) );
+            element.appendChild( besogo.svgStone(svgPos(x), svgPos(y), color, nodeIconSize) ); 
                 color = (color === -1) ? "white" : "black";
                 element.appendChild( besogo.svgLabel(svgPos(x), svgPos(y), color,
                     '' + node.moveNumber) );
                 break;
             case 'setup': // Setup node
                 element = besogo.svgEl("g");
-                element.appendChild(besogo.svgStone(svgPos(x), svgPos(y))); // Grey stone
-                element.appendChild(besogo.svgPlus(svgPos(x), svgPos(y), besogo.RED));
+            element.appendChild(besogo.svgStone(svgPos(x), svgPos(y), nodeIconSize)); // Grey stone
+            element.appendChild(besogo.svgPlus(svgPos(x), svgPos(y), besogo.RED, nodeIconSize));
                 break;
             default: // Empty node
-                element = besogo.svgStone(svgPos(x), svgPos(y)); // Grey stone
+            element = besogo.svgStone(svgPos(x), svgPos(y), nodeIconSize); // Grey stone
         }
         node.navTreeIcon = element; // Save icon reference in game state tree
         node.navTreeX = x; // Save position of the icon
@@ -229,5 +237,24 @@ besogo.makeTreePanel = function(container, editor) {
 
     function svgPos(x) { // Converts (x, y) coordinates to SVG position
         return (x * 120) + 60;
+    }
+
+    /**
+    * TW5: Sets viewBox centered on the SVG image of the tree.
+    *      Fixes size of viewbox to treepanel div size 
+    *      scaled by  SCALE_FACTOR
+    * @param  {int} svgWidth  - The width of the SVG image
+    * @param  {int} svgHeight - The height of the SVG image
+    * @param  {int} divWidth  - The width of the treePanel div
+    * @param  {int} divHeight - The height of the treePanel div
+    * @return {string} viewBox - The complete viewBox string
+    */
+    function  TW5TreeViewBoxSize(svgWidth,svgHeight, divWidth, divHeight){
+        var viewBox = "";
+        viewBox +=  "\'  " +  -(svgWidth/2) ;
+        viewBox +=  " " +  -(svgHeight/2);
+        viewBox +=  " " +  divWidth * SCALE;
+        viewBox +=  " " +  divHeight * SCALE + " \'";
+        return viewBox;
     }
 };

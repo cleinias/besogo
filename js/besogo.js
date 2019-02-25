@@ -130,22 +130,21 @@ besogo.create = function(container, options) {
     options.resize = options.resize || 'fixed';  // Always default to fix for TW-5
 
     if (options.resize === 'auto') { // Add auto-resizing unless resize option is truthy
+        // Width of parent element is passed as an option
+        // by the function calling the constructor. 
+        var parentWidth = options.parentWidth,
+        maxWidth = +(options.maxwidth || -1),
+         // Initial width parent
+         width = (maxWidth > 0 && maxWidth < parentWidth) ? maxWidth : parentWidth;
+
         resizer = function() {
             var windowHeight = window.innerHeight, // Viewport height
-                // Width of parent element is passed as an option
-                // by the function calling the constructor. 
-                parentWidth = options.parentWidth,
-                maxWidth = +(options.maxwidth || -1),
                 orientation = options.orient || 'auto',
-
                 portraitRatio = +(options.portratio || 200) / 100,
                 landscapeRatio = +(options.landratio || 200) / 100,
                 minPanelsWidth = +(options.minpanelswidth || 350),
                 minPanelsHeight = +(options.minpanelsheight || 400),
                 minLandscapeWidth = +(options.transwidth || 600),
-
-                // Initial width parent
-                width = (maxWidth > 0 && maxWidth < parentWidth) ? maxWidth : parentWidth,
                 height; // Initial height is undefined
 
             // Determine orientation if 'auto' or 'view'
@@ -184,8 +183,13 @@ besogo.create = function(container, options) {
         };
         window.addEventListener("resize", resizer);
         resizer(); // Initial div sizing
-    } else if (options.resize === 'fixed') {
-        setDimensions(container.clientWidth, container.clientHeight);
+    } else if (options.resize === 'fixed') { //Set to fixed ratio if in TW5
+        if (options.TW5Ratio){
+            setDimensions(width, width *  options.TW5Ratio);
+        }
+        else{
+            setDimensions(container.clientWidth, container.clientHeight);
+        }
     }
 
     /** Sets dimensions with optional height param, uses flex
