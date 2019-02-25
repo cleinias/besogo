@@ -9,7 +9,9 @@ besogo.makeTreePanel = function(container, editor) {
         pathGroup,
         bottomLayer,
         currentMarker,
-        SCALE = 0.25; // Tree size scaling factor
+        // Tree size scaling factor, works as a multiplier for nodes:
+        // node size / SCALE
+        SCALE = 0.17; 
 
     rebuildNavTree();
     editor.addListener(treeUpdate);

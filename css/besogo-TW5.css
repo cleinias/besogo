@@ -48,7 +48,7 @@
 .besogo-container {
    width:  750px;
    height: 590px;
-   display: grid;
+   display: grid;   
    grid-template-rows:    minmax(0, 3%)  minmax(0,3%)  minmax(0, 5%)  minmax(0, 53%)  minmax(0, 8%) minmax(0, 3%) minmax(0, 20%)  minmax(0, 5%);
    grid-template-columns: minmax(0, 3%)  minmax(0,54%)  minmax(0, 3%)  minmax(0, 40%);
    min-height: 0;  
@@ -123,7 +123,14 @@
     align-items: center;
     min-height: 0; 
     min-width:  0; 
-    background:#FFFFFF;} 
+    background:#FFFFFF;}
+
+.besogo-board-outside-border {
+    /* Just for the outline around the board' external area */
+    grid-column: 1/4;
+    grid-row: 1/6;
+    /* outline: 3px solid black; */
+}
 
 
 /* 1. the panel for the main board */
@@ -133,12 +140,12 @@
     align-items: center;
     min-height: 0; 
     min-width:0;
-    background:   #f2b06d;} 
+    background:   #DDBC6B;} 
 
 /* Sensei's Library mimic board theme */
 
 .besogo-svg-board {
-    fill: #f2b06d;
+    fill: #DDBC6B;
 }
 
 .besogo-svg-lines {
@@ -183,7 +190,7 @@
 /* 4. The panel for the move by move comments */
 .besogo-comment {
     grid-column:  4 / 5 ;
-    grid-row: 4/5 ;
+    grid-row: 4/7 ;
     font-family: Helvetica, sans-serif;
     font-size: 10pt;
    /*  white-space: pre-wrap; */
@@ -221,13 +228,15 @@
 .besogo-names {
     grid-column:  1 / 4 ;
     grid-row: 7/9 ;
+    /* outline: 3px solid black; */
 /*     width: 100%; */
    /* Color for the names is a black #333333     */
    /* But using a different color for test purposes: Gold #FFD700 */
     overflow: auto;
     min-height: 0; 
     min-width:0;
-    background: #333333;
+    background: #555555;
+    border: 3px;
 }
 
 .besogo-playerInfo {
@@ -238,16 +247,20 @@
 
 .besogo-blackInfo {
     /* flex: 50%; */
-    color: white;
-    background: black;
+    /* color: white; */
+    /* background: black; */
+    color: #FFFFFF;
+    background: #555555 ;
     text-align: right;
     padding: 5px;
 }
 
 .besogo-whiteInfo {
     /* flex: 50%; */
-    color: black;
-    background: white;
+    /* color: black; */
+    /* background: white; */
+    color: #FFFFFF;
+    background: #555555 ;
     text-align: left;
     padding: 5px;
 }
@@ -263,7 +276,7 @@
 /* 6. The panel for the game tree */
 .besogo-tree {
     grid-column:  4 / 5 ;
-    grid-row: 5 / 8 ;
+    grid-row: 7 / 8 ;
     max-width: none;  /* Necessary to show tree at real (and scaled size) instead of the whole SVG cramped into the panel  )*/
    /* Color for the tree background is a black: #333333    */
    /* But using a different color for test purposes: Hot pink #FF69B4 */
@@ -283,7 +296,8 @@
        superimposed over the besogo-tree div */
    /* Color for the tree background is a black: #333333    */
    /* But using a different color for test purposes: Hot pink #FF69B4 */
-    background: #333333;
+    /* background: #333333; */
+    fill: #555555;
 }
 
 
@@ -297,5 +311,5 @@
     min-height: 0;
     min-width:0; 
     overflow:auto;
-    background: #222222;
+    background: #555555;
 }
