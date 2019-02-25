@@ -66,9 +66,10 @@
 }
 
 .besogo-container button {
-    height: 30px;
-    width: 30px;
+    height: 15px;
+    width: 17px;
     padding: 0px;
+    justify-content: center;
     background: #d8dcd6;
 }
 
@@ -160,6 +161,24 @@
     stroke-linecap: square;
 }
 
+.besogo-svg-blackStone {
+    fill: #252525;
+    stroke: #252525;
+    stroke-width: 4;
+}
+
+.besogo-svg-whiteStone {
+    fill: #f5f5f5;
+    stroke: #f5f5f5;
+    stroke-width: 4;
+}
+
+.besogo-svg-greyStone {
+    fill: #929591;
+    stroke: #929591;
+    stroke-width: 4;
+}
+
 
 
 /* 2. The movement (control) panel */
@@ -169,7 +188,7 @@
     align-items: center;
     justify-content: space-around;
     width: 100%;
-   /* Color for the control ara is a bluish gray  	#42676B*/
+   /* Color for the control area is a bluish gray #42676B */
     overflow: auto;
     min-height: 0; 
     min-width:0;     
@@ -313,3 +332,16 @@
     overflow:auto;
     background: #555555;
 }
+
+
+/* Stones with more realistic gradients---FIX */
+
+.besogo-svg-whiteStone-gradient {
+   background-image: radial-gradient(circle, white, black);
+}
+
+.besogo-svg-blackStone-gradient {
+   background-image: radial-gradient(circle, black, white);
+}
+
+.besogo-svg-grayStone-gradient {}
