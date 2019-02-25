@@ -102,12 +102,13 @@ besogo.makeTreePanel = function(container, editor) {
         
         width = 120 * nextOpen.length; // Compute height and width of nav tree
         height = 120 * Math.max.apply(Math, nextOpen);
-        //viewBox= TW5TreeViewBoxSize(width, height, divWidth,divHeight);
+        // viewBox= TW5TreeViewBoxSize(width, height, divWidth,divHeight);
         // SF: temp! set proper viewbox in CSS!
-        svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+        svg.setAttribute('viewBox', '0 0 ' + width / SCALE + ' ' + height / SCALE); //scaling up tree 
         svg.setAttribute('height', height + "px"); 
         svg.setAttribute('width', width + "px");   
         svg.setAttribute('overflow','scroll');
+        svg.setAttribute('class', 'besogo-svgTree');
         console.log("Tree real height: ", height, "  and real width: ", width);
         if (oldSvg) { // Replace SVG in container  // Now the tree
             container.replaceChild(svg, oldSvg);

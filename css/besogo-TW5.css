@@ -161,7 +161,7 @@
     grid-row: 1 / 3 ;
     align-items: center;
     justify-content: space-around;
-    width: 70%;
+    width: 100%;
    /* Color for the control ara is a bluish gray  	#42676B*/
     overflow: auto;
     min-height: 0; 
@@ -227,7 +227,7 @@
     overflow: auto;
     min-height: 0; 
     min-width:0;
-    background: #FFD700;
+    background: #333333;
 }
 
 .besogo-playerInfo {
@@ -264,7 +264,7 @@
 .besogo-tree {
     grid-column:  4 / 5 ;
     grid-row: 5 / 8 ;
-    /* width: 100%; */
+    max-width: none;  /* Necessary to show tree at real (and scaled size) instead of the whole SVG cramped into the panel  )*/
    /* Color for the tree background is a black: #333333    */
    /* But using a different color for test purposes: Hot pink #FF69B4 */
     overflow: auto;
@@ -273,13 +273,18 @@
     background: #333333;
 }
 
-/* .besogo-svg-backer { */
-/*     /\* The background to the rectangle holding the tree nodes,  */
-/*        superimposed over the besogo-tree div *\/ */
-/*    /\* Color for the tree background is a black: #333333    *\/ */
-/*    /\* But using a different color for test purposes: Hot pink #FF69B4 *\/ */
-/*     background: #333333; */
-/* } */
+.besogo-svgTree {
+    max-width: none !important; // Needed to override 100% set by TW
+    max-width: unset;
+}
+
+.besogo-svg-backer {
+    /* The background to the rectangle holding the tree nodes,
+       superimposed over the besogo-tree div */
+   /* Color for the tree background is a black: #333333    */
+   /* But using a different color for test purposes: Hot pink #FF69B4 */
+    background: #333333;
+}
 
 
 
@@ -292,5 +297,5 @@
     min-height: 0;
     min-width:0; 
     overflow:auto;
-    background: #ADFF2F;
+    background: #222222;
 }
