@@ -14,7 +14,7 @@
 *    +------------------------+--------------------1-+      
 *    | +--------------------+ 2  40px  2-control   2 |       40px
 *    | |                    | |--------------------3-|
-*    | |                    | |  30px  5-tool        |       30px
+*    | |                    | |  30px  3-tool        |       30px
 *    | |                    | |--------------------4-|
 *    | |  410px 1-board     | |                      |
 *    | |                    | |                      | 
@@ -26,7 +26,7 @@
 *    |------------------------|                    7 |      
 *    |                        |  180px 6-tree        |     
 *    |                        |                      |      110px
-*    | 140px 3-names          |                      |
+*    | 140px 5-names          |                      |
 *    |                        |--------------------8-|     
 *    |                        |   30px 7-file        |       30px 
 *    +------------------------+--------------------9-+      
@@ -46,23 +46,15 @@
 
 /* 0. Main container for the besogo editor  */
 .besogo-container {
-    outline: none;
-    /* clear: both; */
-    /* width: 750px; */
-    /* height: 590px; */
-    display: grid;
-    /* Notice that in the CSS grid module you specify the width of the tracks
-    *  but you name the lines delimiting them on either side! 
-    */                  
-    /* In pixels with overall size w:750 h:590 */
-    /* grid-template-rows:  20px 20px  30px  310px 50px 20px 110px 30px ; */
-    /* grid-template-columns:  20px 410px 20px 300px ; */
-    /* in percents */
-    grid-template-rows:  3% 3% 5% 53% 8% 3% 20% 5% ; /* Rounding up pixel sizes*/
-    grid-template-columns:  3% 54%  3% 40%;
-
-    /* font-family: Helvetica, sans-serif; */
-    font-size: 10pt;
+   width:  750px;
+   height: 590px;
+   display: grid;
+   grid-template-rows:    minmax(0, 3%)  minmax(0,3%)  minmax(0, 5%)  minmax(0, 53%)  minmax(0, 8%) minmax(0, 3%) minmax(0, 20%)  minmax(0, 5%);
+   grid-template-columns: minmax(0, 3%)  minmax(0,54%)  minmax(0, 3%)  minmax(0, 40%);
+   min-height: 0;  
+   min-width: 0;   
+   font-family: Helvetica, sans-serif;
+   font-size: 10pt;
     /* TEST COLOR  Antique White: #FAEBD7    */
     /* background: #FAEBD7; */
     background:  #675443;  /* will show up as a border around the board*/
@@ -70,7 +62,7 @@
 
 .besogo-container * {
     box-sizing: border-box;
-    background:  #675443;  /* will show up as a border around the board*/
+    /* background:  #675443;  /\* will show up as a border around the board*\/ */
 }
 
 .besogo-container button {
@@ -92,7 +84,7 @@
     width: 30px;
 }
 
-.besogo-container svg { /* Prevent text selection within SVG */
+.besogo-container svg {          /* Prevent text selection within SVG */
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none;   /* Chrome/Safari/Opera */
     -moz-user-select: none;      /* Firefox */
@@ -100,13 +92,47 @@
      user-select: none;
 }
 
+/* The empty goban borders, now set to white for testing*/
+.besogo-panel0-1 {
+    grid-column: 1/4;
+    grid-row:    1/2;
+    align-items: center;
+    min-height: 0; 
+    min-width:0; 
+    background:#FFFFFF;} 
+    
+.besogo-panel0-2 {
+    grid-column: 1/2;
+    grid-row:    2/6;
+    align-items: center;
+    min-height: 0; 
+    min-width:  0; 
+    background:#FFFFFF;} 
+
+.besogo-panel0-3 {
+    grid-column:1/4;
+    grid-row:6/7;
+    align-items: center;
+    min-height: 0; 
+    min-width:  0; 
+    background:#FFFFFF;} 
+    
+.besogo-panel0-4 {
+    grid-column: 3/4;
+    grid-row:    2/6;
+    align-items: center;
+    min-height: 0; 
+    min-width:  0; 
+    background:#FFFFFF;} 
+
 
 /* 1. the panel for the main board */
 .besogo-board {
     grid-column: 2/3;
     grid-row:    2/6;
     align-items: center;
-    min-height: 0;
+    min-height: 0; 
+    min-width:0;
     background:   #f2b06d;} 
 
 /* Sensei's Library mimic board theme */
@@ -134,23 +160,73 @@
     grid-column: 4 / 5 ;
     grid-row: 1 / 3 ;
     align-items: center;
-   /*  justify-content: space-around; */
-   /*  width: 100%; */
-   /* /\* Color for the control ara is a bluish gray  	#42676B*\/ */
+    justify-content: space-around;
+    width: 70%;
+   /* Color for the control ara is a bluish gray  	#42676B*/
     overflow: auto;
-    min-height: 0;
+    min-height: 0; 
+    min-width:0;     
     background: #42676B;
 }
 
-/* 3. The names (or game info) panel */
+/* 3. The panel for the markup tools */
+.besogo-tool {
+    grid-column:  4 / 5 ;
+    grid-row: 3 / 4 ;
+    overflow: auto;
+   /* Color for the markup is the same as for control, a dark grey  #466567  */
+    min-height: 0; 
+    min-width:0;
+    background: #774441;
+}
+
+/* 4. The panel for the move by move comments */
+.besogo-comment {
+    grid-column:  4 / 5 ;
+    grid-row: 4/5 ;
+    font-family: Helvetica, sans-serif;
+    font-size: 10pt;
+   /*  white-space: pre-wrap; */
+   /*  overflow: auto; */
+   /*  width: 100%; */
+   /* /\* Color for the comments is a  warm grayish    *\/ */
+    overflow: scroll;
+    min-height: 0; 
+    min-width:0;
+    overflow: auto;
+    background: #BABBAB;
+}
+
+.besogo-comment input[type='button'] {
+    float: right;
+}
+
+.besogo-comment textarea {
+    height: 100%;
+    width: 100%;
+    background: #BABBAB;}
+
+.besogo-gameInfo {
+    padding: 5px;
+    border-collapse: collapse;
+    background: #BABBAB;}
+
+.besogo-gameInfo td, tr {
+    border: 1px solid black;
+    padding: 3px;
+    background: #BABBAB;
+}
+
+/* 5. The names (or game info) panel */
 .besogo-names {
     grid-column:  1 / 4 ;
     grid-row: 7/9 ;
-    width: 100%;
+/*     width: 100%; */
    /* Color for the names is a black #333333     */
    /* But using a different color for test purposes: Gold #FFD700 */
     overflow: auto;
-    min-height: 0;
+    min-height: 0; 
+    min-width:0;
     background: #FFD700;
 }
 
@@ -184,72 +260,37 @@
     float: right;
 }
 
-/* 4. The panel for the move by move comments */
-.besogo-comment {
-    grid-column:  4 / 5 ;
-    grid-row: 4/5 ;
-    font-family: Helvetica, sans-serif;
-    font-size: 10pt;
-   /*  white-space: pre-wrap; */
-   /*  overflow: auto; */
-   /*  width: 100%; */
-   /* /\* Color for the comments is a  warm grayish    *\/ */
-    overflow: auto;
-    min-height: 0;
-    overflow: auto;
-    background: #BABBAB;
-}
-
-.besogo-comment input[type='button'] {
-    float: right;
-}
-
-.besogo-comment textarea {
-    height: 100%;
-    width: 100%;
-    background: #BABBAB;}
-
-.besogo-gameInfo {
-    padding: 5px;
-    border-collapse: collapse;
-    background: #BABBAB;}
-
-.besogo-gameInfo td, tr {
-    border: 1px solid black;
-    padding: 3px;
-    background: #BABBAB;    
-}
-
-/* 5. The panel for the markup tools */
-.besogo-tool {
-    grid-column:  4 / 5 ;
-    grid-row: 3 / 4 ;
-    overflow: auto;
-   /* Color for the markup is the same as for control, a dark grey  #466567  */
-    min-height: 0;
-    background: #774441;
-}
-
 /* 6. The panel for the game tree */
 .besogo-tree {
     grid-column:  4 / 5 ;
     grid-row: 5 / 8 ;
-    /* overflow: auto; */
     /* width: 100%; */
    /* Color for the tree background is a black: #333333    */
    /* But using a different color for test purposes: Hot pink #FF69B4 */
     overflow: auto;
     min-height: 0;
-    background: #FF69B4;
+    min-width:0;
+    background: #333333;
 }
+
+/* .besogo-svg-backer { */
+/*     /\* The background to the rectangle holding the tree nodes,  */
+/*        superimposed over the besogo-tree div *\/ */
+/*    /\* Color for the tree background is a black: #333333    *\/ */
+/*    /\* But using a different color for test purposes: Hot pink #FF69B4 *\/ */
+/*     background: #333333; */
+/* } */
+
+
 
 /* 7. The panel for the file loading and saving commands */
 .besogo-file {
     grid-column:  4 / 5 ;
-    grid-row: 8 / 9
+    grid-row: 8 / 9;
     /* Color for the file laoding is  a very dark grey/black:  #222222  */
     /* But using a different color for test purposes: Green/Yellow #ADFF2F */
-    overflow: auto;
     min-height: 0;
+    min-width:0; 
+    overflow:auto;
     background: #ADFF2F;
 }
