@@ -88,7 +88,7 @@ besogo.create = function(container, options) {
     }
 
     // TW5: set current node  to stored position, defaults to root
-    var previousPosInTree = besogo.widget.wiki.getTiddler(besogo.widget.getVariable("currentTiddler")).fields["editorPosInTree"];
+    var previousPosInTree = besogo.widget.wiki.getTiddler(besogo.widget.getVariable("currentTiddler")).fields["editor-pos-in-tree"];
     // If we are at root do nothing
     if (previousPosInTree &&  previousPosInTree !== "0,0"){
         goToPosInTree(previousPosInTree.trim().split(",")[0],
@@ -288,6 +288,9 @@ besogo.create = function(container, options) {
     */
     function saveSgfToTiddler(tiddlerTitle){
         besogo.widget.wiki.setText(tiddlerTitle, "text", null, besogo.composeSgf(editor), null);
+        /* Need to save board size explicitly because it is not held in besogo's gameInfo structure */
+        besogo.widget.wiki.setText(tiddlerTitle, "board-size", null, editor.getRoot().getSize().x+"x"+editor.getRoot().getSize().y, null);
+
     }
 
     /**
@@ -296,7 +299,7 @@ besogo.create = function(container, options) {
     *      on every tree change. 
     */
     function savePosToTiddler(tiddlerTitle){
-        besogo.widget.wiki.setText(tiddlerTitle, "editorPosInTree", null, moveFromNode(editor.getCurrent()), null);
+        besogo.widget.wiki.setText(tiddlerTitle, "editor-pos-in-tree", null, moveFromNode(editor.getCurrent()), null);
     }
 
     /**
@@ -345,7 +348,7 @@ besogo.create = function(container, options) {
             "AP" : "application",
             "CA" : "charset",
             "FF" : "file-format",
-            "SZ" : "board-size",
+            "SZ" : "board-size",  
             "AN" : "annotator",
             "BR" : "black-rank",
             "BT" : "black-team",

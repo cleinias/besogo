@@ -139,7 +139,7 @@ besogo.loadSgf = function(sgf, editor) {
             value = node.props[i].values.join().trim(); // Join the values array
             if (id === 'SZ') { // Size property
                 size = besogo.parseSize(value);
-                gameInfo["SZ"]= size.x+"x"+size.y ;               //SF: Added for TW5
+                // gameInfo["board-size"]= size.x+"x"+size.y ;               //SF: Added for TW5
             } else if (id === 'ST') { // Style property
                 editor.setVariantStyle( +value ); // Converts value to number
             } else if (gameInfoIds.indexOf(id) !== -1) { // Game info property
