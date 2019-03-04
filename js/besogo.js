@@ -47,6 +47,7 @@ besogo.create = function(container, options) {
     options.size = besogo.parseSize(options.size || 19);
     options.coord = options.coord || 'none';
     options.tool = options.tool || 'auto';
+    options.label = options.label || '1';
     if (options.panels === '') {
         options.panels = [];
     }
@@ -64,6 +65,7 @@ besogo.create = function(container, options) {
     /** Make the core editor object */
     editor = besogo.makeEditor(options.size.x, options.size.y);
     editor.setTool(options.tool);
+    editor.setLabel(options.label);
     editor.setCoordStyle(options.coord);
     if (options.realstones) { // Using realistic stones
         editor.REAL_STONES = true;
