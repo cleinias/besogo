@@ -48,6 +48,7 @@ besogo.create = function(container, options) {
     options.coord = options.coord || 'none';
     options.tool = options.tool || 'auto';
     options.label = options.label || '1';
+    // options.variantStyle = options.variantStyle || 1;
     if (options.panels === '') {
         options.panels = [];
     }
@@ -66,6 +67,7 @@ besogo.create = function(container, options) {
     editor = besogo.makeEditor(options.size.x, options.size.y);
     editor.setTool(options.tool);
     editor.setLabel(options.label);
+    editor.setVariantStyle(options.variantStyle);
     editor.setCoordStyle(options.coord);
     if (options.realstones) { // Using realistic stones
         editor.REAL_STONES = true;
@@ -129,10 +131,10 @@ besogo.create = function(container, options) {
     //     }
     }
 
-    options.resize = options.resize || 'fixed';  // Always default to fix for TW-5
+    options.resize = options.resize || 'fixed';  // Always default to fixed for TW-5
 
     if (options.resize === 'auto') { // Add auto-resizing unless resize option is truthy
-        // Width of parent element is passed as an option
+        // TW5: Width of parent element is passed as an option
         // by the function calling the constructor. 
         var parentWidth = options.parentWidth,
         maxWidth = +(options.maxwidth || -1),
@@ -199,10 +201,8 @@ besogo.create = function(container, options) {
     * @param {int} width    - The width of the div to set up in px
     * @param {int} [height] - The optional height of the div to set up in px
     */
-    //SF: FIXME: Need to change this function to switch to new CSS-grid layout. NO FLEX! 
     function setDimensions(width, height) {
-        // SF: Quick hack for testing
-        // Do nothing! All div's dimensions are set by CSS-grid
+        // SF: Do nothing! All divs' dimensions are set by CSS-grid in stylesheet
     }
     //   ORIGINAL CODE ALL COMMENTED OUT    
     //     if (height && width > height) { // Landscape mode

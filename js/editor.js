@@ -103,7 +103,7 @@ besogo.makeEditor = function(sizeX, sizeY) {
         if (typeof set === 'string') {
             set = set.replace(/\s/g, ' ').trim(); // Convert all whitespace to space and trim
             label = set || "1"; // Default to "1" if empty string
-            tool = 'label'; // Also change current tool to label
+            // tool = 'label'; // Also change current tool to label
             notifyListeners({ tool: tool, label: label }); // Notify tool/label change
         }
     }
