@@ -256,15 +256,41 @@ besogo.create = function(container, options) {
     */
     function tiddlerUpdate (msg){
         var tiddlerTitle = besogo.widget.parentWidget.transcludeTitle;
-        if (msg.treeChange || msg.stoneChange || msg.markupChange || msg.comment) {
+        if (msg.treeChange || msg.stoneChange ||
+            msg.markupChange || msg.comment ||
+            msg.coord || msg.label ||
+            msg.tool || msg.variantStyle){
+            
             saveSgfToTiddler(tiddlerTitle);
+            saveTW5OptionsToTiddler(tiddlerTitle);
         };
         if (msg.gameInfo){
             saveInfoToTiddler(tiddlerTitle);
         };
         savePosToTiddler(tiddlerTitle);
     }
-    
+
+    /** 
+    * TW5: save goban size and editor options into 
+    *      widget's underlying tiddler's fields
+    * @param {string} tiddlerTitle - The title of the underlying tiddler 
+    *                                holding the sgf record  
+    */ 
+    function saveTW5OptionsToTiddler(tiddlerTitle){
+        var options = {};  //editor options to save in tiddler
+        options.tool = editor.getTool();
+        options.label = editor.getLabel();
+        options.variantStyle=editor.getVariantStyle();
+        options.coord=editor.getCoordStyle();  ; 
+        besogo.widget.wiki.setText(tiddlerTitle, "size", null,
+                                   editor.getRoot().getSize().x+":" +
+                                   editor.getRoot().getSize().y, null);
+        for (var option in options){
+            besogo.widget.wiki.setText(tiddlerTitle, option, null,
+                                       options[option], null);
+        }
+    }
+
     /**
     * TW5: Asks the editor for all the info about the current game 
     * and saves them to the widget's underlying tiddler.
@@ -282,15 +308,13 @@ besogo.create = function(container, options) {
     
     /**
     * TW5: Creates the sgf record from the tree and 
-    * saves it to the editor's widget's underlying tiddler.
+    *      saves it to the editor's widget's underlying tiddler.
     * @param {string} tiddlerTitle - The title of the underlying tiddler 
                                      holding the sgf record  
     */
     function saveSgfToTiddler(tiddlerTitle){
-        besogo.widget.wiki.setText(tiddlerTitle, "text", null, besogo.composeSgf(editor), null);
-        /* Need to save board size explicitly because it is not held in besogo's gameInfo structure */
-        besogo.widget.wiki.setText(tiddlerTitle, "board-size", null, editor.getRoot().getSize().x+"x"+editor.getRoot().getSize().y, null);
-
+        besogo.widget.wiki.setText(tiddlerTitle, "text", null,
+                                   besogo.composeSgf(editor), null);
     }
 
     /**
@@ -348,7 +372,7 @@ besogo.create = function(container, options) {
             "AP" : "application",
             "CA" : "charset",
             "FF" : "file-format",
-            "SZ" : "board-size",  
+            "SZ" : "size",  
             "AN" : "annotator",
             "BR" : "black-rank",
             "BT" : "black-team",

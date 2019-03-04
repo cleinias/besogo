@@ -38,9 +38,7 @@ besogo.makeEditor = function(sizeX, sizeY) {
 
         // Variant style: even/odd - children/siblings, <2 - show auto markup for variants
         variantStyle = 0; // 0-3, 0 is default
-
-
-
+        
     return {
         addListener: addListener,
         click: click,
