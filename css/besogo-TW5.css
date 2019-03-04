@@ -169,7 +169,8 @@
 
 .besogo-svg-whiteStone {
     fill: #f5f5f5;
-    stroke: #f5f5f5;
+    /* stroke: #f5f5f5; */
+    stroke: #333333;
     stroke-width: 4;
 }
 
